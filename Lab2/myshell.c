@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
     char arg[BUFFER_LEN] = { 0 };
     char *token;
     int counter;
+    char *argpoint;
 
 
     // Parse the commands provided using argc and argv
@@ -40,14 +41,13 @@ int main(int argc, char *argv[])
         const char delim[2] = " ";
         // Perform string tokenization to get the command and argument
        // printf("%s", buffer);
-        buffer[BUFFER_LEN-1] = "\0";
+       // buffer[BUFFER_LEN-1] = "\0";
         token = strtok(buffer, delim);
         strcpy(command, token);
-        while(token != "NULL" ) {
-            printf(" %s\n", token);
-            arg[counter] = strtok("NULL", delim);
-            counter++;
-        }
+        // while(token != NULL ) {
+        //     token = strtok(NULL, delim);
+        //     strcpy(arg, token);
+        // }
 
 
             
@@ -66,6 +66,28 @@ int main(int argc, char *argv[])
         else if (strcmp(command, "quit") == 0)
         {
             return EXIT_SUCCESS;
+        }
+        else if (strcmp(command, "help") == 0)
+        {
+            printf("hello");
+            FILE *f;
+            char c, filename[100] = "readme";
+
+            f = fopen(filename, "r");
+            if(f == NULL)
+            {
+                printf("no file");
+                exit(0);
+            }
+            c = fgetc(f);
+            while (c !=EOF)
+            {
+                printf("%c", c);
+                c = fgetc(f);
+            }
+
+            fclose(f);
+
         }
 
         // Unsupported command
