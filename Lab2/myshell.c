@@ -27,13 +27,31 @@ int main(int argc, char *argv[])
     char buffer[BUFFER_LEN] = { 0 };
     char command[BUFFER_LEN] = { 0 };
     char arg[BUFFER_LEN] = { 0 };
+    char *token;
+    int counter;
+
 
     // Parse the commands provided using argc and argv
 
     // Perform an infinite loop getting command input from users
     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
     {
+        counter = 0;
+        const char delim[2] = " ";
         // Perform string tokenization to get the command and argument
+       // printf("%s", buffer);
+        buffer[BUFFER_LEN-1] = "\0";
+        token = strtok(buffer, delim);
+        strcpy(command, token);
+        while(token != "NULL" ) {
+            printf(" %s\n", token);
+            arg[counter] = strtok("NULL", delim);
+            counter++;
+        }
+
+
+            
+        
 
         // Check the command and execute the operations for each command
         // cd command -- change the current directory
@@ -55,6 +73,7 @@ int main(int argc, char *argv[])
         {
             fputs("Unsupported command, use help to display the manual\n", stderr);
         }
+           
     }
     return EXIT_SUCCESS;
 }
