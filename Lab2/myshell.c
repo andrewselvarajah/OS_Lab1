@@ -40,14 +40,18 @@ int main(int argc, char *argv[])
         counter = 0;
         const char delim[2] = " ";
         // Perform string tokenization to get the command and argument
-       // printf("%s", buffer);
-       // buffer[BUFFER_LEN-1] = "\0";
-        token = strtok(buffer, delim);
+        //printf("%s", buffer);
+        //buffer[BUFFER_LEN-1] = "\0";
+        token = strtok(buffer, "\n");
+        token = strtok(buffer, " ");
         strcpy(command, token);
-        // while(token != NULL ) {
-        //     token = strtok(NULL, delim);
-        //     strcpy(arg, token);
-        // }
+        printf("%s", command);
+        
+        while(token != NULL ) {
+            strcpy(arg, token);
+            printf("%s", arg);
+            token = strtok(NULL, " ");
+          }
 
 
             
@@ -69,7 +73,6 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(command, "help") == 0)
         {
-            printf("hello");
             FILE *f;
             char c, filename[100] = "readme";
 
