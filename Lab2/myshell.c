@@ -20,6 +20,7 @@
 // Put global environment variables here
 
 // Define functions declared in myshell.h here
+void printDir();
 
 int main(int argc, char *argv[])
 {
@@ -27,7 +28,10 @@ int main(int argc, char *argv[])
     char buffer[BUFFER_LEN] = { 0 };
     char command[BUFFER_LEN] = { 0 };
     char arg[BUFFER_LEN] = { 0 };
+    char pwd[BUFFER_LEN] = "/home/osboxes/Documents/OS Labs/Lab2";//for the current directory
+    char shell[BUFFER_LEN] = { 0 };
     char *token;
+    char *input;
     int counter;
     char *argpoint;
 
@@ -45,11 +49,9 @@ int main(int argc, char *argv[])
         token = strtok(buffer, "\n");
         token = strtok(buffer, " ");
         strcpy(command, token);
-        printf("%s", command);
         
         while(token != NULL ) {
             strcpy(arg, token);
-            printf("%s", arg);
             token = strtok(NULL, " ");
           }
 
@@ -62,6 +64,26 @@ int main(int argc, char *argv[])
         if (strcmp(command, "cd") == 0)
         {
             // your code here
+        }
+        //outputs current working directory
+        else if (strcmp(command, "pwd") == 0)
+        {
+            input = getcwd(pwd, BUFFER_LEN);
+            printf("%s\n", input);
+
+        }
+        //lists all files within current directory
+         else if (strcmp(command, "dir") == 0)
+        {
+            printDir();
+        }
+        //lists all relevent variables
+        else if (strcmp(command, "environ") == 0)
+        {
+            input = getcwd(pwd, BUFFER_LEN);
+            printf("pwd: %s\n", input);
+            printf("shell: %s\n", shell);
+
         }
 
         // other commands here...
@@ -102,3 +124,15 @@ int main(int argc, char *argv[])
     }
     return EXIT_SUCCESS;
 }
+//todo: need to fix
+void printDir(){
+     DIR *directory = opendir("Lab2/");
+     if(directory == NULL){
+         printf("Directory does not exist");
+     }
+     else{
+         struct dirent *dire = readdir(directory);
+         printf("I think working");
+     }
+
+ }
