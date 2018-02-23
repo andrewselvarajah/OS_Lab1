@@ -20,6 +20,7 @@
 // Put global environment variables here
 
 // Define functions declared in myshell.h here
+void searchDir(char *pwd, char *arg);
 void printDir();
 
 int main(int argc, char *argv[])
@@ -28,7 +29,7 @@ int main(int argc, char *argv[])
     char buffer[BUFFER_LEN] = { 0 };
     char command[BUFFER_LEN] = { 0 };
     char arg[BUFFER_LEN] = { 0 };
-    char pwd[BUFFER_LEN] = "/home/osboxes/Documents/OS Labs/Lab2";//for the current directory
+    char pwd[BUFFER_LEN] = "";//for the current directory
     char shell[BUFFER_LEN] = { 0 };
     char *token;
     char *input;
@@ -59,7 +60,8 @@ int main(int argc, char *argv[])
         if(strcmp(command, arg) == 0 && counter < 2){
             strcpy(arg, "");
         }
-        printf("%s\n", arg);
+        input = getcwd(pwd, BUFFER_LEN);
+        *pwd = *input;
 
 
             
@@ -74,6 +76,7 @@ int main(int argc, char *argv[])
                 printf("cd 'Directory name'\n");
             }
             else{
+                searchDir(pwd, arg);
                 printf("%s\n", arg);
             }
             // your code here
@@ -82,7 +85,8 @@ int main(int argc, char *argv[])
         else if (strcmp(command, "pwd") == 0)
         {
             input = getcwd(pwd, BUFFER_LEN);
-            printf("%s\n", input);
+            *pwd = *input;
+            printf("%s\n", pwd);
 
         }
         //lists all files within current directory
@@ -99,13 +103,13 @@ int main(int argc, char *argv[])
 
         }
 
-        // other commands here...
         
         // quit command -- exit the shell
         else if (strcmp(command, "quit") == 0)
         {
             return EXIT_SUCCESS;
         }
+        //help command
         else if (strcmp(command, "help") == 0)
         {
             FILE *f;
@@ -137,7 +141,7 @@ int main(int argc, char *argv[])
     }
     return EXIT_SUCCESS;
 }
-//todo: fixed
+//prints all files within the current directory
 void printDir(char *pwd){
      DIR *directory = opendir(pwd);
      struct dirent *dire = NULL;
@@ -149,9 +153,35 @@ void printDir(char *pwd){
         {
             printf(" [%s] ",dire->d_name);
         }
-         printf("%s\n", dire);
+        printf("\n");
      }
      closedir(directory);
      
+
+ }
+ //searches through the list of files and checks if the argument is 
+ //one of the files for cd
+ //todo: fix check in case file is not within directory
+ //check if argument is a directory
+ //update pwd properly so that new directory is current
+ void searchDir(char *pwd, char *arg){
+     DIR *directory = opendir(pwd);
+     struct dirent *dire = NULL;
+     if(directory == NULL){
+         printf("Directory does not exist\n");
+     }
+     else{
+        while(NULL != (dire = readdir(directory)) )
+        {
+            if(strcmp(arg, dire->d_name) == 0){
+                //*pwd = pwd + "/" + arg;  //gives an error
+            }
+            else{
+
+            }
+            printf(" [%s] ",dire->d_name);
+        }
+        printf("\n");
+     }
 
  }
