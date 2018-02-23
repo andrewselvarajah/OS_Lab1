@@ -49,11 +49,17 @@ int main(int argc, char *argv[])
         token = strtok(buffer, "\n");
         token = strtok(buffer, " ");
         strcpy(command, token);
+
         
         while(token != NULL ) {
             strcpy(arg, token);
             token = strtok(NULL, " ");
-          }
+            counter  = counter + 1;
+        }
+        if(strcmp(command, arg) == 0 && counter < 2){
+            strcpy(arg, "");
+        }
+        printf("%s\n", arg);
 
 
             
@@ -63,6 +69,13 @@ int main(int argc, char *argv[])
         // cd command -- change the current directory
         if (strcmp(command, "cd") == 0)
         {
+            if(strcmp(arg, "") == 0){
+                printf("Not a directory\n");
+                printf("cd 'Directory name'\n");
+            }
+            else{
+                printf("%s\n", arg);
+            }
             // your code here
         }
         //outputs current working directory
@@ -75,7 +88,7 @@ int main(int argc, char *argv[])
         //lists all files within current directory
          else if (strcmp(command, "dir") == 0)
         {
-            printDir();
+            printDir(pwd);
         }
         //lists all relevent variables
         else if (strcmp(command, "environ") == 0)
@@ -124,15 +137,21 @@ int main(int argc, char *argv[])
     }
     return EXIT_SUCCESS;
 }
-//todo: need to fix
-void printDir(){
-     DIR *directory = opendir("Lab2/");
+//todo: fixed
+void printDir(char *pwd){
+     DIR *directory = opendir(pwd);
+     struct dirent *dire = NULL;
      if(directory == NULL){
-         printf("Directory does not exist");
+         printf("Directory does not exist\n");
      }
      else{
-         struct dirent *dire = readdir(directory);
-         printf("I think working");
+        while(NULL != (dire = readdir(directory)) )
+        {
+            printf(" [%s] ",dire->d_name);
+        }
+         printf("%s\n", dire);
      }
+     closedir(directory);
+     
 
  }
