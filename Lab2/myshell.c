@@ -25,21 +25,26 @@ void printDir();
 
 int main(int argc, char *argv[])
 {
-    // Input buffer and and commands
+    // cwd buffer and and commands
     char buffer[BUFFER_LEN] = { 0 };
     char command[BUFFER_LEN] = { 0 };
     char arg[BUFFER_LEN] = { 0 };
     char pwd[BUFFER_LEN] = "";//for the current directory
     char shell[BUFFER_LEN] = { 0 };
-    char *token;
-    char *input;
-    int counter;
-    char *argpoint;
+    char *token;//holds seperate tokens
+    char *cwd;//temp holds the cwd
+    int counter;//cehcks number of arguments
 
 
     // Parse the commands provided using argc and argv
+    cwd = getcwd(pwd, BUFFER_LEN);
+    *pwd = *cwd;
+    printf("shell=");
+    printf("%s", pwd);
+    printf("/myshell:");
 
-    // Perform an infinite loop getting command input from users
+
+    // Perform an infinite loop getting command cwd from users
     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
     {
         counter = 0;
@@ -60,9 +65,7 @@ int main(int argc, char *argv[])
         if(strcmp(command, arg) == 0 && counter < 2){
             strcpy(arg, "");
         }
-        input = getcwd(pwd, BUFFER_LEN);
-        *pwd = *input;
-
+        
 
             
         
@@ -84,8 +87,8 @@ int main(int argc, char *argv[])
         //outputs current working directory
         else if (strcmp(command, "pwd") == 0)
         {
-            input = getcwd(pwd, BUFFER_LEN);
-            *pwd = *input;
+            cwd = getcwd(pwd, BUFFER_LEN);
+            *pwd = *cwd;
             printf("%s\n", pwd);
 
         }
@@ -94,15 +97,24 @@ int main(int argc, char *argv[])
         {
             printDir(pwd);
         }
+        //clears screen
+        else if (strcmp(command, "clr") == 0)
+        {
+            printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        }
         //lists all relevent variables
         else if (strcmp(command, "environ") == 0)
         {
-            input = getcwd(pwd, BUFFER_LEN);
-            printf("pwd: %s\n", input);
+            cwd = getcwd(pwd, BUFFER_LEN);
+            printf("pwd: %s\n", cwd);
             printf("shell: %s\n", shell);
 
         }
-
+        //prints argument
+        else if (strcmp(command, "echo") == 0)
+        {
+            printf("%s\n", arg);
+        }
         
         // quit command -- exit the shell
         else if (strcmp(command, "quit") == 0)
@@ -137,6 +149,9 @@ int main(int argc, char *argv[])
         {
             fputs("Unsupported command, use help to display the manual\n", stderr);
         }
+    printf("shell=");
+    printf("%s", pwd);
+    printf("/myshell:");
            
     }
     return EXIT_SUCCESS;
