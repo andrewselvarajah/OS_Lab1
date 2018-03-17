@@ -23,6 +23,75 @@ int gridChecks[9];
 int board[9][9];
 
 
+void loadFile();
+void checkColumn();
+void checkRow();
+int checkSubGrid(int rowNum, int column);
+void* validateGrids();
+void solve_square(int row, int col);
+void navigate(int row, int col);
+void printBoard();
+void writeToFile (char fileName[]);
+
+
+int main()
+{
+   
+    loadFile();
+	bool valid = true;
+
+    printBoard();
+	checkSudoku();
+	for(int i = 0; i < 9; i++){
+		if(columnChecks[i] == 0 || rowChecks[i] == 0 || gridChecks[i] == 0){
+			valid = false;
+			break;
+		}
+	}
+	if(valid){
+		puts("Unsolved Puzzle:");
+		printBoard();
+		solve_square(0,0);
+		if(check){
+			puts("Solved Puzzle:");
+			printBoard();
+		} else {
+			puts("Sudoku puzzle is unsolvable.");
+		}
+	} else {
+		puts("Puzzle is not a valid sudoku.");
+	}
+}
+void writeToFile (char fileName[]) {
+	FILE *file = fopen(fileName, "w");
+
+	if (file != NULL) {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				if (j != 8)
+					fprintf(file, "%d ", board[i][j]);
+				else
+					fprintf(file, "%d", board[i][j]);
+			}
+			fprintf(file, "\n");
+		}
+	} else {
+		printf("File: %s could not be opened for writing", fileName);
+		return;
+	}
+}
+void printBoard(){
+	for (int x = 0; x < 9; x++)
+    {
+        for (int y = 0; y < 9; y++)
+        {
+            printf("%d", board[x][y]);
+            printf(" ");
+        }
+        printf("\n");
+    }
+
+}
 
 void loadFile(){
     file = fopen("puzzle.txt", "r");
@@ -54,7 +123,6 @@ void checkColumn(){
 			}
 		}
 	}
-	return NULL;
 
 }
 void checkRow(){
@@ -73,7 +141,6 @@ void checkRow(){
 			}
 		}
 	}
-	return NULL;
 
 }
 int checkSubGrid(int rowNum, int column){
@@ -100,9 +167,8 @@ void* validateGrids () {
 			gridChecks[row+col/3] = checkSubGrid(row, col);
 		}
 	}
-	return NULL;
 }
-void checkSudoku(){
+int checkSudoku(){
     pthread_t columns, rows, grids;
 
 	// create threads and execute thread functions
@@ -124,20 +190,34 @@ void checkSudoku(){
 	}
 	return 1;
 }
-
-int main()
-{
-   
-    loadFile();
-
-    for (int x = 0; x < 9; x++)
-    {
-        for (int y = 0; y < 9; y++)
-        {
-            printf("%d", board[x][y]);
-            printf(" ");
-        }
-        printf("\n");
-    }
+void solve_square(int row, int col) {
+	if(row>8){
+		check = true;
+		return;
+	}
+	if(board[row][col] != 0){
+		navigate(row, col);
+	} else {
+		for(int i = 1; i <= 9; i++){
+			board[row][col] = i;
+			checkSudoku();
+			if(columnChecks[col] != 1 || rowChecks[row] != 1
+				|| gridChecks[(row/3)*3+col/3] != 1){
+				board[row][col] = 0;
+			} else {
+				navigate(row, col);
+			}
+			if(check)
+				return;
+		}
+		board[row][col] = 0;
+	}
 }
+void navigate(int row, int col){
+	if(col<8)
+		solve_square(row, col+1);
+	else
+		solve_square(row+1, 0);
+}
+
 
