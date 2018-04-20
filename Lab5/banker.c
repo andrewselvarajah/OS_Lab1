@@ -13,12 +13,16 @@
 #include "banker.h"
 
 // Put any other macros or constants here using #define
+
+
 // May be any values >= 0
 #define NUM_CUSTOMERS 5
 #define NUM_RESOURCES 3
 
 
 // Put global environment variables here
+int *temp;
+
 // Available amount of each resource
 int available[NUM_RESOURCES];
 
@@ -33,29 +37,43 @@ int need[NUM_CUSTOMERS][NUM_RESOURCES];
 
 
 // Define functions declared in banker.h here
-// bool request_res(int n_customer, int request[])
-// {
-//      ...
-// }
+ bool request_res(int n_customer, int request[])
+ {
+      
+ }
 
 // Release resources, returns true if successful
-// bool release_res(int n_customer, int release[])
-// {
+ bool release_res(int n_customer, int release[])
+ {
 //      ...
-// }
+ }
 
 
 int main(int argc, char *argv[])
 {
     // ==================== YOUR CODE HERE ==================== //
 
-    // Read in arguments from CLI, NUM_RESOURCES is the number of arguments   
+    // Read in arguments from CLI, NUM_RESOURCES is the number of arguments 
+    if(argc == 3){
+        for (int i = 1; i < argc; ++i){
+            available[i-1] = argv[i];
+        }
+    }
     
     // Allocate the available resources
 
     // Initialize the pthreads, locks, mutexes, etc.
+    pthread_mutex_t mutex;
+    sem_t mutex;
+    sem_init(&sem,0,1);
+    pthread_mutex_init(&mutex,NULL);
+    pthread_t threads[NUM_RESOURCES];
 
     // Run the threads and continually loop
+     for (child = 0; child < NUM_RESOURCES; ++child)
+    {
+        pthread_create(&threads[child], NULL, worker, &b);
+    }
 
     // The threads will request and then release random numbers of resources
 
